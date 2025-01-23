@@ -37,10 +37,6 @@ public class Bus {
     private int seats;
 
     @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate departureDate;
-
-    @NotNull
     @Pattern(regexp = "^(2[0-3]|[01]?\\d):[0-5]\\d$", message = "Departure time must be in HH:mm format (24-hour clock).")
     private String departureTime;
 

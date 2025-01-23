@@ -40,7 +40,6 @@ public class BusService {
 	    existingBus.setRouteFrom(bus.getRouteFrom());
 	    existingBus.setRouteTo(bus.getRouteTo());
 	    existingBus.setSeats(bus.getSeats());
-	    existingBus.setDepartureDate(bus.getDepartureDate());
 	    existingBus.setDepartureTime(bus.getDepartureTime());
 	    existingBus.setPrice(bus.getPrice());
 

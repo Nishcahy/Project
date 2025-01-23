@@ -210,3 +210,12 @@ org.eclipse.core.runtime.CoreException: Could not resolve artifact org.springfra
 2025-01-23 20:56:51,058 [Worker-34: Launching Executing generate-sources in C__Users_2380147_Downloads_Project_bus_service-main] INFO  o.eclipse.m2e.core.internal.Bundles - 	Entry: C:\Users\2380147\Downloads\sts-4.27.0.RELEASE\plugins\com.google.guava.failureaccess_1.0.2.jar
 2025-01-23 20:56:51,079 [Worker-34: Launching Executing generate-sources in C__Users_2380147_Downloads_Project_bus_service-main] INFO  o.e.m.i.launch.MavenLaunchDelegate - Run build in "C:\Users\2380147\Downloads\Project\bus_service-main":
 2025-01-23 20:56:51,120 [Worker-34: Launching Executing generate-sources in C__Users_2380147_Downloads_Project_bus_service-main] INFO  o.e.m.i.launch.MavenLaunchDelegate -  mvn  -B -Dstyle.color=always generate-sources
+2025-01-23 21:08:00,409 [Worker-41: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-01-23 21:08:00,429 [Worker-41: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-01-23 21:08:00,432 [Worker-41: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\2380147\Downloads\Project\busreservation-main\src\test\resources
+2025-01-23 21:13:24,852 [Worker-41: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-01-23 21:13:24,879 [Worker-41: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-01-23 21:13:24,882 [Worker-41: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\2380147\Downloads\Project\bus_service-main\src\test\resources
+2025-01-23 21:13:47,753 [Worker-43: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-01-23 21:13:47,785 [Worker-43: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-01-23 21:13:47,788 [Worker-43: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\2380147\Downloads\Project\bus_service-main\src\test\resources
