@@ -3,6 +3,7 @@ package com.busreservation.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.busreservation.DTO.ReservationDTO;
+import com.busreservation.entity.Bus;
 import com.busreservation.entity.Reservation;
 import com.busreservation.service.BusReservationService;
 
@@ -44,6 +46,12 @@ public class ReservationController {
 	    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
 	        reservationService.deleteReservation(id);
 	        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	    }
+	    
+	    @GetMapping("/{routeFrom}/{routeTo}")
+	    public ResponseEntity<List<Bus>> findBusByFromAndToDestination(@PathVariable String routeFrom,@PathVariable String routeTo){
+	    	return new ResponseEntity(reservationService.findBusByFromAndToDestination(routeFrom, routeTo),HttpStatus.OK);
+	    			
 	    }
 	
 

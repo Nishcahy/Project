@@ -1,5 +1,6 @@
 package com.busreservation.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +43,19 @@ public class BusReservationService {
 	    public List<Reservation> getReservationsByUser(Long userId) {
 	        return reservationRepository.findByUserId(userId);
 	    }
-
+	    
+	    public List<Bus> findBusByFromAndToDestination(String routeFrom,String routeTo){
+	    	List<Bus> buses=busClient.fetchAllBus();
+	    	
+	    	List<Bus> requiredBuses=new ArrayList<>();
+	    	for(Bus bus:buses) {
+	    		if(routeFrom.equalsIgnoreCase(bus.getRouteFrom()) && routeTo.equalsIgnoreCase(bus.getRouteTo())) {
+	    			requiredBuses.add(bus);
+	    		}
+	    		
+	    	}
+	    	return requiredBuses;
+	    }
 	    public void deleteReservation(Long id) {
 	        reservationRepository.deleteById(id);
 	    }
