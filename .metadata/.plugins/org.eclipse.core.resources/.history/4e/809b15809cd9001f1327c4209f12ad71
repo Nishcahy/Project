@@ -1,0 +1,5 @@
+package com.busreservation.DTO;
+
+public class ReservationDTO {
+
+}
