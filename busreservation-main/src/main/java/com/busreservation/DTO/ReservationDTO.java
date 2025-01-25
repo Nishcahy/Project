@@ -1,5 +1,6 @@
 package com.busreservation.DTO;
 
+import com.busreservation.entity.Passenger;
 import com.busreservation.entity.Reservation;
 
 import lombok.Data;
@@ -10,6 +11,7 @@ public class ReservationDTO {
 	
 	private Bus bus;
 	private Reservation reservation;
+	
 	
 	public ReservationDTO(Bus bus,Reservation reservation) {
 		this.bus=bus;

@@ -16,20 +16,20 @@ import com.busreservation.DTO.Bus;
 import com.busreservation.DTO.ReservationDTO;
 import com.busreservation.entity.Reservation;
 import com.busreservation.service.BusReservationService;
+import com.busreservation.service.PassengerService;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/api/reservations")
+@AllArgsConstructor
 public class ReservationController {
-	
 	
 
 	    private final BusReservationService reservationService;
-
-	    public ReservationController(BusReservationService reservationService) {
-	        this.reservationService = reservationService;
-	    }
+	    private final PassengerService passengerService;
+	    
 
 	    @PostMapping
 	    public ResponseEntity<ReservationDTO> createReservation(@RequestBody @Valid Reservation reservation) {
@@ -52,6 +52,9 @@ public class ReservationController {
 	    	return new ResponseEntity(reservationService.findBusByFromAndToDestination(routeFrom, routeTo),HttpStatus.OK);
 	    			
 	    }
-	
-
+	    
+	    @DeleteMapping("/deletePassenger/{reservationId}/{passengerId}")
+	    public ResponseEntity<String> deletePassengerById(@PathVariable Long reservationId,@PathVariable Long passengerId ){
+	    	return new ResponseEntity<>(passengerService.deletePassengerFromReservation(reservationId, passengerId), HttpStatus.OK);
+	    }
 }
