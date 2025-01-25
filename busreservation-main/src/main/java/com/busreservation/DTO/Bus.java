@@ -1,4 +1,4 @@
-package com.busreservation.entity;
+package com.busreservation.DTO;
 
 
 import java.time.LocalDate;

@@ -1,19 +1,23 @@
 package com.busreservation.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.busreservation.DTO.Bus;
 import com.busreservation.DTO.ReservationDTO;
-import com.busreservation.entity.Bus;
 import com.busreservation.entity.Reservation;
+import com.busreservation.exception.ResourceNotFoundException;
 import com.busreservation.repo.ReservationRepo;
 
 @Service
 public class BusReservationService {
-
+		
+		Logger logger=LoggerFactory.getLogger(BusReservationService.class);
 	    private final ReservationRepo reservationRepository;
 	    private final BusClient busClient;
 	    public BusReservationService(ReservationRepo reservationRepository,BusClient busClient) {
@@ -31,7 +35,7 @@ public class BusReservationService {
 	        }
 
 	        // Calculate the total price dynamically
-	        double totalAmount = reservation.getNumberOfSeats() * busDetails.getPrice();
+	        double totalAmount = (double)reservation.getNumberOfSeats() * busDetails.getPrice();
 	        reservation.setTotalAmount(totalAmount);
 
 	        // Save the reservation
@@ -56,7 +60,24 @@ public class BusReservationService {
 	    	}
 	    	return requiredBuses;
 	    }
-	    public void deleteReservation(Long id) {
-	        reservationRepository.deleteById(id);
-	    }
+	    public String deleteReservation(Long id) {
+	        Reservation reservation = reservationRepository.findById(id)
+	                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found with ID: " + id));
+	        
+	        LocalDate reservationDate = reservation.getDate();
+	        LocalDate currentDate = LocalDate.now();
+	        
+	        // Debug statements to check the dates
+	        logger.info("***************************************Reservation Date:{} " , reservationDate);
+	        logger.info("Current Date: {}" ,currentDate);
+	        logger.info("Allowed Cancellation Date:{} " , reservationDate.plusDays(7));
+	        if (currentDate.isBefore(reservationDate.plusDays(7))) {
+	        	throw new ResourceNotFoundException("Reservation cannot be cancelled after 7 days from the reservation date.");
+	        }else {
+	        	reservationRepository.deleteById(id);
+	        }
+	        
+	        
+	        return "Reservation deleted";
+	    }	 
 }

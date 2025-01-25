@@ -1,5 +1,8 @@
 package com.busreservation.entity;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,11 +25,12 @@ public class Reservation {
 	    private Long busId; // Reference to the bus
 
 	    @NotNull
-	    private String date;
+	    private LocalDate date;
 
 	    @NotNull
 	    private Integer numberOfSeats;
 
 	    private Double totalAmount;
+	    
 	
 }

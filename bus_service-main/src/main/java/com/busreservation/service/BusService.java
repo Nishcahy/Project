@@ -13,7 +13,6 @@ public class BusService {
 	private BusRepo busRepo;
 	
 	public BusService(BusRepo busRepo) {
-		// TODO Auto-generated constructor stub
 		this.busRepo=busRepo;
 	}
 	

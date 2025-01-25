@@ -1,6 +1,5 @@
 package com.busreservation.DTO;
 
-import com.busreservation.entity.Bus;
 import com.busreservation.entity.Reservation;
 
 import lombok.Data;
