@@ -4,17 +4,18 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.busreservation.Dto.Reservation;
 import com.busreservation.entity.Bus;
 import com.busreservation.repository.BusRepo;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class BusService {
 	
 	private BusRepo busRepo;
-	
-	public BusService(BusRepo busRepo) {
-		this.busRepo=busRepo;
-	}
+	private ReservationClient reservationClient;
 	
 	
 	public Bus addBus(Bus  bus) {
@@ -50,5 +51,8 @@ public class BusService {
         busRepo.deleteById(id);
     }
 	
+	public List<Reservation> getReservations(){
+		return reservationClient.getAllReservation();
+	}
 
 }

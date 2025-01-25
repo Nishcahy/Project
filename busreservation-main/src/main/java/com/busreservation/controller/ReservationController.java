@@ -57,4 +57,9 @@ public class ReservationController {
 	    public ResponseEntity<String> deletePassengerById(@PathVariable Long reservationId,@PathVariable Long passengerId ){
 	    	return new ResponseEntity<>(passengerService.deletePassengerFromReservation(reservationId, passengerId), HttpStatus.OK);
 	    }
+	    
+	    @GetMapping("/getAllReservation")
+	    public ResponseEntity<List<Reservation>> getAllReservation(){
+	    	return new ResponseEntity(reservationService.getAllReservation(),HttpStatus.OK);
+	    }
 }

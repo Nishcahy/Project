@@ -79,5 +79,9 @@ public class BusReservationService {
 	        
 	        
 	        return "Reservation deleted";
-	    }	 
+	    }
+	    
+	    public List<Reservation> getAllReservation(){
+	    	return reservationRepository.findAll();
+	    }
 }
