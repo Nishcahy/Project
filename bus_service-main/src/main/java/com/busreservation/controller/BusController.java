@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.busreservation.Dto.Reservation;
 import com.busreservation.entity.Bus;
+import com.busreservation.exception.ResourceNotFoundException;
 import com.busreservation.service.BusService;
 
 import lombok.AllArgsConstructor;
@@ -34,24 +35,24 @@ public class BusController {
 	}
 	
 	@GetMapping("/all-bus")
-	public List<Bus> fetchAllBus(){
-		return busService.fetchAllBus();
+	public ResponseEntity<List<Bus>> fetchAllBus(){
+		return new ResponseEntity<>(busService.fetchAllBus(),HttpStatus.OK);
 	}
 	
 	@PutMapping("update-bus/{id}")
-	public Bus updateBus(@PathVariable Long id, @RequestBody Bus bus) {
-		return busService.updateBus(id, bus);
+	public ResponseEntity<Bus> updateBus(@PathVariable Long id, @RequestBody Bus bus) throws ResourceNotFoundException {
+		return new ResponseEntity<> (busService.updateBus(id, bus),HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Bus> deleteBus(@PathVariable Long id){
+	public ResponseEntity<Bus> deleteBus(@PathVariable Long id) throws ResourceNotFoundException{
 		busService.deleteBus(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		
 	}
 	
 	@GetMapping("/findBus/{id}")
-	public ResponseEntity<Bus> findByBusId(@PathVariable Long id) {
+	public ResponseEntity<Bus> findByBusId(@PathVariable Long id) throws ResourceNotFoundException {
 		
 		return new ResponseEntity<>(busService.findBusById(id),HttpStatus.OK) ;
 	}
