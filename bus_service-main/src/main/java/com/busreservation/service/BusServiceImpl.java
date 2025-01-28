@@ -3,6 +3,8 @@ package com.busreservation.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.busreservation.Dto.Reservation;
@@ -18,12 +20,16 @@ public class BusServiceImpl implements BusService {
 
 	private BusRepo busRepo;
 	private ReservationClient reservationClient;
+	
+	private final Logger logger=LoggerFactory.getLogger(BusServiceImpl.class);
 
 	public Bus addBus(Bus bus) {
+		logger.info("****Bus Added sucessefully with id {}",bus.getBusId());
 		return busRepo.save(bus);
 	}
 
 	public List<Bus> fetchAllBus() {
+		logger.info("*****Fetching all Buses......");
 		return busRepo.findAll();
 	}
 
@@ -32,6 +38,7 @@ public class BusServiceImpl implements BusService {
 		if(!bus.isPresent()) {
 			throw new ResourceNotFoundException("Bus not found with ID: " + id);
 		}
+		logger.info("Finding bus by id{}",id);
 		return bus.get();
 		
 	}
@@ -57,6 +64,7 @@ public class BusServiceImpl implements BusService {
 		Optional<Bus> bus=busRepo.findById(id);
 		if(bus.isPresent()) {
 			busRepo.deleteById(id);
+			logger.info("Bus deleted with id {}",id);
 		}else {
 			throw new ResourceNotFoundException("Bus not found with id"+id);
 			
@@ -67,6 +75,7 @@ public class BusServiceImpl implements BusService {
 	}
 
 	public List<Reservation> getReservations() {
+		logger.info("Geeting all reservation");
 		return reservationClient.getAllReservation();
 	}
 
