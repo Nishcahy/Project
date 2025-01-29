@@ -1,6 +1,5 @@
 package com.busreservation.exception;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +16,6 @@ public class GlobalExceptionHandler {
 		@ExceptionHandler(ResourceNotFoundException.class)
 		public ResponseEntity<Map<String,Object>> handleResourceNotFoundException(ResourceNotFoundException exception){
 			Map<String,Object> res=new HashMap<>();
-//			res.put("timestamp", LocalDateTime.now());
 			res.put("msg",exception.getMessage());
 			res.put("status", HttpStatus.NOT_FOUND.value());
 			return new ResponseEntity<>(res,HttpStatus.NOT_FOUND);

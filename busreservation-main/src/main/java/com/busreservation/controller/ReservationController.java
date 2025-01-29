@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.busreservation.DTO.Bus;
-import com.busreservation.DTO.ReservationDTO;
+import com.busreservation.dto.Bus;
+import com.busreservation.dto.ReservationDTO;
 import com.busreservation.entity.Reservation;
 import com.busreservation.service.BusReservationService;
 import com.busreservation.service.PassengerService;
@@ -44,12 +44,12 @@ public class ReservationController {
 	    @DeleteMapping("/{id}")
 	    public ResponseEntity<String> deleteReservation(@PathVariable Long id) {
 	        String msg=reservationService.deleteReservation(id);
-	        return new ResponseEntity<String>(msg, HttpStatus.OK);
+	        return new ResponseEntity<>(msg, HttpStatus.OK);
 	    }
 	    
 	    @GetMapping("/{routeFrom}/{routeTo}")
 	    public ResponseEntity<List<Bus>> findBusByFromAndToDestination(@PathVariable String routeFrom,@PathVariable String routeTo){
-	    	return new ResponseEntity(reservationService.findBusByFromAndToDestination(routeFrom, routeTo),HttpStatus.OK);
+	    	return new ResponseEntity<>(reservationService.findBusByFromAndToDestination(routeFrom, routeTo),HttpStatus.OK);
 	    			
 	    }
 	    
@@ -60,6 +60,6 @@ public class ReservationController {
 	    
 	    @GetMapping("/getAllReservation")
 	    public ResponseEntity<List<Reservation>> getAllReservation(){
-	    	return new ResponseEntity(reservationService.getAllReservation(),HttpStatus.OK);
+	    	return new ResponseEntity<>(reservationService.getAllReservation(),HttpStatus.OK);
 	    }
 }

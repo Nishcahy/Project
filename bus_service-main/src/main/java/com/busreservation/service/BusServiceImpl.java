@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.busreservation.Dto.Reservation;
+import com.busreservation.dto.Reservation;
 import com.busreservation.entity.Bus;
 import com.busreservation.exception.ResourceNotFoundException;
 import com.busreservation.repository.BusRepo;
@@ -23,8 +23,11 @@ public class BusServiceImpl implements BusService {
 	
 	private final Logger logger=LoggerFactory.getLogger(BusServiceImpl.class);
 
-	public Bus addBus(Bus bus) {
-		logger.info("****Bus Added sucessefully with id {}",bus.getBusId());
+	public Bus addBus(Bus bus) throws ResourceNotFoundException {
+//		logger.info("****Bus Added sucessefully with id {}",bus.getBusId());
+//		if(busRepo.existByBusNo(bus.getBusNo())) {
+//			throw new ResourceNotFoundException("Bus already exist with given Number");
+//		}
 		return busRepo.save(bus);
 	}
 

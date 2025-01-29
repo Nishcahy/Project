@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.busreservation.DTO.Bus;
+import com.busreservation.dto.Bus;
 
 @FeignClient(url="http://localhost:8085/api/buses",value="Bus-Client")
 public interface BusClient {

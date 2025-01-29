@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.busreservation.Dto.Reservation;
+import com.busreservation.dto.Reservation;
 import com.busreservation.entity.Bus;
 import com.busreservation.exception.ResourceNotFoundException;
 import com.busreservation.service.BusService;
@@ -34,7 +34,7 @@ public class BusController {
 	
 	//addBus 
 	@PostMapping  //http://localhost:8085/api/buses
-	public ResponseEntity<Bus> addBus(@RequestBody Bus bus){
+	public ResponseEntity<Bus> addBus(@RequestBody Bus bus) throws ResourceNotFoundException{
 		logger.info("****Inside addBus method");
 		return new ResponseEntity<> (busService.addBus(bus),HttpStatus.CREATED);
 	}

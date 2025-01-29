@@ -1,5 +1,7 @@
 package com.busreservation.entity;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,7 +37,9 @@ public class Bus {
     @NotNull
     @Pattern(regexp = "^(2[0-3]|[01]?\\d):[0-5]\\d$", message = "Departure time must be in HH:mm format (24-hour clock).")
     private String departureTime;
-
+    
+    private LocalDate departureDate;
+    
     @Min(value = 0, message = "Price must be a positive value.")
     private int price;
 	

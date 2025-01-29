@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.busreservation.DTO.Bus;
-import com.busreservation.DTO.ReservationDTO;
+import com.busreservation.dto.Bus;
+import com.busreservation.dto.ReservationDTO;
 import com.busreservation.entity.Reservation;
 import com.busreservation.exception.ResourceNotFoundException;
 import com.busreservation.repo.ReservationRepo;

@@ -35,7 +35,7 @@ public class PassengerServiceImpl implements PassengerService {
 	public String deletePassenger(Long id)  {
 		Optional<Passenger> passenger= passengerRepo.findById(id);
 		if(!passenger.isPresent()) {
-			throw new ResourceNotFoundException("passenger Id not found");
+			throw new ResourceNotFoundException("passenger Id not found for delete");
 		}
 		
 		passengerRepo.deleteById(id);
@@ -46,7 +46,7 @@ public class PassengerServiceImpl implements PassengerService {
 	public Passenger updatePassenger(Passenger passenger) {
 		Optional<Passenger> passenger1=passengerRepo.findById(passenger.getPid());
 		if(!passenger1.isPresent()) {
-			throw new ResourceNotFoundException("passenger Id not found");
+			throw new ResourceNotFoundException("passenger Id not found for update");
 		}
 		
 		return passengerRepo.save(passenger);

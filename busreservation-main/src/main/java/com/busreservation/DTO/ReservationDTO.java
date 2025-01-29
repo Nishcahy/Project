@@ -1,6 +1,5 @@
-package com.busreservation.DTO;
+package com.busreservation.dto;
 
-import com.busreservation.entity.Passenger;
 import com.busreservation.entity.Reservation;
 
 import lombok.Data;
