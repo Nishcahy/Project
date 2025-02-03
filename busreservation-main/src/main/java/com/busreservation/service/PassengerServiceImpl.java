@@ -19,6 +19,7 @@ public class PassengerServiceImpl implements PassengerService {
 	
 	private PassengerRepo passengerRepo;
 	private ReservationRepo reservationRepo;
+	private BusClient busClient;
 	@Override
 	public Passenger addPassenger(Passenger passenger) {
 		
@@ -53,7 +54,7 @@ public class PassengerServiceImpl implements PassengerService {
 	}
 
 	@Override
-	public Passenger findById(Long id) throws ResourceNotFoundException {
+	public Passenger findById(Long id) {
 		Optional<Passenger> passenger=passengerRepo.findById(id);
 		if(!passenger.isPresent()) {
 			throw new ResourceNotFoundException("passenger Id not found");
@@ -68,6 +69,7 @@ public class PassengerServiceImpl implements PassengerService {
             Reservation reservation = reservationOpt.get();
             reservation.getPassengers().removeIf(passenger -> passenger.getPid().equals(passengerId));
             reservation.setNumberOfSeats(reservation.getNumberOfSeats()-1);
+            reservation.setTotalAmount(reservation.getTotalAmount()-busClient.fetchBus(reservation.getBusId()).getPrice());
             reservationRepo.save(reservation);
             return "Passenger deleted in Reservation";
         } else {

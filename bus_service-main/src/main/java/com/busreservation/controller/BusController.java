@@ -63,7 +63,6 @@ public class BusController {
 	//get bus by id
 	@GetMapping("/findBus/{id}")  //http://localhost:8085/api/buses/findBus/123
 	public ResponseEntity<Bus> findByBusId(@PathVariable Long id) throws ResourceNotFoundException {
-		
 		return new ResponseEntity<>(busService.findBusById(id),HttpStatus.OK) ;
 	}
 	

@@ -14,6 +14,8 @@ import com.busreservation.entity.Reservation;
 import com.busreservation.exception.ResourceNotFoundException;
 import com.busreservation.repo.ReservationRepo;
 
+import feign.FeignException;
+
 @Service
 public class BusReservationService {
 		
@@ -27,21 +29,26 @@ public class BusReservationService {
 	    }
 
 	    public ReservationDTO createReservation(Reservation reservation) {
-	        // Get the bus price (mocked for now)
-	    	Bus busDetails = busClient.fetchBus(reservation.getBusId());
+	        try {
+	            // Get the bus price
+	            Bus busDetails = busClient.fetchBus(reservation.getBusId());
+                LocalDate currentDate=LocalDate.now();
+	            if(reservation.getDate().isBefore(currentDate)) {
+	            	throw new ResourceNotFoundException("Bus Reservation cannot be done in past days");
+	            }
+	            // Calculate the total price dynamically
+	            double totalAmount = (double) reservation.getNumberOfSeats() * busDetails.getPrice();
+	            reservation.setTotalAmount(totalAmount);
+                Reservation res = reservationRepository.save(reservation);
 
-	        if (busDetails == null) {
-	            throw new IllegalArgumentException("Bus not found with ID: " + reservation.getBusId());
+	            return new ReservationDTO(busDetails, res);
+	        } catch (FeignException e) {
+	            if (e.status() == 404) {
+	                throw new ResourceNotFoundException("Bus not found with ID: " + reservation.getBusId());
+	            }
+	            // Handle other exceptions
+	            throw new RuntimeException("An error occurred while fetching bus details", e);
 	        }
-
-	        // Calculate the total price dynamically
-	        double totalAmount = (double)reservation.getNumberOfSeats() * busDetails.getPrice();
-	        reservation.setTotalAmount(totalAmount);
-
-	        // Save the reservation
-	        Reservation res=reservationRepository.save(reservation);
-	        
-	        return new ReservationDTO(busDetails,res);
 	    }
 
 	    public List<Reservation> getReservationsByUser(Long userId) {
@@ -56,7 +63,9 @@ public class BusReservationService {
 	    		if(routeFrom.equalsIgnoreCase(bus.getRouteFrom()) && routeTo.equalsIgnoreCase(bus.getRouteTo())) {
 	    			requiredBuses.add(bus);
 	    		}
-	    		
+	    	}
+	    	if(requiredBuses.isEmpty()) {
+	    		throw new ResourceNotFoundException("No bus in specified location");
 	    	}
 	    	return requiredBuses;
 	    }

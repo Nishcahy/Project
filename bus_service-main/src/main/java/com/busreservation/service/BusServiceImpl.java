@@ -20,8 +20,8 @@ public class BusServiceImpl implements BusService {
 
 	private BusRepo busRepo;
 	private ReservationClient reservationClient;
-	
-	private final Logger logger=LoggerFactory.getLogger(BusServiceImpl.class);
+
+	private final Logger logger = LoggerFactory.getLogger(BusServiceImpl.class);
 
 	public Bus addBus(Bus bus) throws ResourceNotFoundException {
 //		logger.info("****Bus Added sucessefully with id {}",bus.getBusId());
@@ -37,16 +37,16 @@ public class BusServiceImpl implements BusService {
 	}
 
 	public Bus findBusById(Long id) throws ResourceNotFoundException {
-		Optional<Bus> bus= busRepo.findById(id);
-		if(!bus.isPresent()) {
+		Optional<Bus> bus = busRepo.findById(id);
+		if (!bus.isPresent()) {
 			throw new ResourceNotFoundException("Bus not found with ID: " + id);
 		}
-		logger.info("Finding bus by id{}",id);
+		logger.info("Finding bus by id{}", id);
 		return bus.get();
-		
+
 	}
 
-	public Bus updateBus(Long id, Bus bus) throws ResourceNotFoundException{
+	public Bus updateBus(Long id, Bus bus) throws ResourceNotFoundException {
 		Bus existingBus = busRepo.findById(id).orElse(null);
 
 		if (existingBus == null) {
@@ -64,17 +64,14 @@ public class BusServiceImpl implements BusService {
 	}
 
 	public void deleteBus(Long id) throws ResourceNotFoundException {
-		Optional<Bus> bus=busRepo.findById(id);
-		if(bus.isPresent()) {
+		Optional<Bus> bus = busRepo.findById(id);
+		if (bus.isPresent()) {
 			busRepo.deleteById(id);
-			logger.info("Bus deleted with id {}",id);
-		}else {
-			throw new ResourceNotFoundException("Bus not found with id"+id);
-			
+			logger.info("Bus deleted with id {}", id);
+		} else {
+			throw new ResourceNotFoundException("Bus not found with id" + id);
+
 		}
-		
-		
-		
 	}
 
 	public List<Reservation> getReservations() {
