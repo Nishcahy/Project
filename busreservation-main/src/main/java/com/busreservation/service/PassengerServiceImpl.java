@@ -9,6 +9,7 @@ import com.busreservation.entity.Reservation;
 import com.busreservation.exception.ResourceNotFoundException;
 import com.busreservation.repo.PassengerRepo;
 import com.busreservation.repo.ReservationRepo;
+import com.busreservation.service.client.BusClient;
 
 import lombok.AllArgsConstructor;
 

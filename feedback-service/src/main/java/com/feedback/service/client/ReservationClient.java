@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.feedback.entity.Reservation;
 
-@FeignClient(name = "reservation-service")
+@FeignClient("BUS-BOOKING")
 public interface ReservationClient {
-	@GetMapping("/reservations/{id}")
-	Reservation getReservation(@PathVariable("id") Long id);
+	@GetMapping("api/reservations/{id}")
+	Reservation getReservation(@PathVariable Long id);
 }

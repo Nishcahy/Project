@@ -35,26 +35,28 @@ public class BusController {
 	//addBus 
 	@PostMapping  //http://localhost:8085/api/buses
 	public ResponseEntity<Bus> addBus(@RequestBody Bus bus) throws ResourceNotFoundException{
-		logger.info("****Inside addBus method");
+		logger.info("****Inside addBus method in controller");
 		return new ResponseEntity<> (busService.addBus(bus),HttpStatus.CREATED);
 	}
 	
 	//Getting all buses
 	@GetMapping("/all-bus")  //http://localhost:8085/api/buses/all-bus
 	public ResponseEntity<List<Bus>> fetchAllBus(){
-		logger.info("Fetching all busses");
+		logger.info("Fetching all busses in controller");
 		return new ResponseEntity<>(busService.fetchAllBus(),HttpStatus.OK);
 	}
 	
 	//Updating bus 
 	@PutMapping("update-bus/{id}")  //http://localhost:8085/api/buses/update-bus/123
 	public ResponseEntity<Bus> updateBus(@PathVariable Long id, @RequestBody Bus bus) throws ResourceNotFoundException {
+		logger.info("Updating bus in controller");
 		return new ResponseEntity<> (busService.updateBus(id, bus),HttpStatus.OK);
 	}
 	
 	//delete bus by id
 	@DeleteMapping("/{id}")  //http://localhost:8085/api/buses/123
 	public ResponseEntity<Bus> deleteBus(@PathVariable Long id) throws ResourceNotFoundException{
+		logger.info("Deleting bus in controller");
 		busService.deleteBus(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		
@@ -63,6 +65,7 @@ public class BusController {
 	//get bus by id
 	@GetMapping("/findBus/{id}")  //http://localhost:8085/api/buses/findBus/123
 	public ResponseEntity<Bus> findByBusId(@PathVariable Long id) throws ResourceNotFoundException {
+		logger.info("Fetching bus by id in controller");
 		return new ResponseEntity<>(busService.findBusById(id),HttpStatus.OK) ;
 	}
 	
@@ -70,6 +73,7 @@ public class BusController {
 	//getting all reservation
 	@GetMapping("/getAllReservation") //http://localhost:8085/api/buses/getAllReservation
 	public ResponseEntity<List<Reservation>> getAllReservation(){
+		logger.info("Fetching Reservation ");
 		return new ResponseEntity<>(busService.getReservations(), HttpStatus.OK);
 	}
 	

@@ -9,6 +9,5 @@ import com.busreservation.entity.Bus;
 @Repository
 public interface BusRepo extends JpaRepository<Bus, Long>{
 	
-//	boolean existByBusNo(String busNO);
 
 }

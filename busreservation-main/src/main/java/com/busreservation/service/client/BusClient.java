@@ -1,4 +1,4 @@
-package com.busreservation.service;
+package com.busreservation.service.client;
 
 
 import java.util.List;
@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.busreservation.dto.Bus;
 
-@FeignClient(url="http://localhost:8085/api/buses",value="Bus-Client")
+@FeignClient("BUS-SERVICE")
 public interface BusClient {
 	
 	
-	@GetMapping("/findBus/{id}")
+	@GetMapping("api/buses/findBus/{id}")
 	Bus fetchBus(@PathVariable Long id);
 	
-	@GetMapping("/all-bus")
+	@GetMapping("api/buses/all-bus")
 	List<Bus> fetchAllBus();
 
 }

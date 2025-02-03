@@ -3,9 +3,11 @@ package com.busreservation.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.busreservation.dto.Bus;
@@ -13,21 +15,25 @@ import com.busreservation.dto.ReservationDTO;
 import com.busreservation.entity.Reservation;
 import com.busreservation.exception.ResourceNotFoundException;
 import com.busreservation.repo.ReservationRepo;
+import com.busreservation.service.client.BusClient;
 
 import feign.FeignException;
 
 @Service
-public class BusReservationService {
+
+public class BusReservationServiceImpl implements BusReservation{
 		
-		Logger logger=LoggerFactory.getLogger(BusReservationService.class);
+		Logger logger=LoggerFactory.getLogger(BusReservationServiceImpl.class);
+		@Autowired
 	    private final ReservationRepo reservationRepository;
+		@Autowired
 	    private final BusClient busClient;
-	    public BusReservationService(ReservationRepo reservationRepository,BusClient busClient) {
+	    public BusReservationServiceImpl(ReservationRepo reservationRepository,BusClient busClient) {
 	        this.reservationRepository = reservationRepository;
 	        this.busClient=busClient;
 	       
 	    }
-
+	    @Override
 	    public ReservationDTO createReservation(Reservation reservation) {
 	        try {
 	            // Get the bus price
@@ -50,7 +56,8 @@ public class BusReservationService {
 	            throw new RuntimeException("An error occurred while fetching bus details", e);
 	        }
 	    }
-
+	    
+	    @Override
 	    public List<Reservation> getReservationsByUser(Long userId) {
 	        return reservationRepository.findByUserId(userId);
 	    }
@@ -69,6 +76,8 @@ public class BusReservationService {
 	    	}
 	    	return requiredBuses;
 	    }
+	    
+	    @Override
 	    public String deleteReservation(Long id) {
 	        Reservation reservation = reservationRepository.findById(id)
 	                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found with ID: " + id));
@@ -80,17 +89,29 @@ public class BusReservationService {
 	        logger.info("***************************************Reservation Date:{} " , reservationDate);
 	        logger.info("Current Date: {}" ,currentDate);
 	        logger.info("Allowed Cancellation Date:{} " , reservationDate.plusDays(7));
-	        if (currentDate.isBefore(reservationDate.plusDays(7))) {
-	        	throw new ResourceNotFoundException("Reservation cannot be cancelled after 7 days from the reservation date.");
-	        }else {
-	        	reservationRepository.deleteById(id);
+	        if (currentDate.isAfter(reservationDate.minusDays(7))) {
+	            throw new ResourceNotFoundException("Reservation cannot be cancelled within 7 days from the reservation date.");
+	        } else {
+	            reservationRepository.deleteById(id);
 	        }
 	        
 	        
 	        return "Reservation deleted";
 	    }
 	    
+	    @Override
 	    public List<Reservation> getAllReservation(){
 	    	return reservationRepository.findAll();
 	    }
+		@Override
+		public Reservation findById(Long reservationId) {
+			Optional<Reservation> reservation=reservationRepository.findById(reservationId);
+			if(!reservation.isPresent()) {
+			  throw new ResourceNotFoundException("No reservation with id");
+			}
+			
+			return reservation.get();
+		}
+	    
+	    
 }

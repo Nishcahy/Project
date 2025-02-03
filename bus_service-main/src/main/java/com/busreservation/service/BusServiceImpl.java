@@ -11,6 +11,7 @@ import com.busreservation.dto.Reservation;
 import com.busreservation.entity.Bus;
 import com.busreservation.exception.ResourceNotFoundException;
 import com.busreservation.repository.BusRepo;
+import com.busreservation.service.client.ReservationClient;
 
 import lombok.AllArgsConstructor;
 
@@ -20,37 +21,40 @@ public class BusServiceImpl implements BusService {
 
 	private BusRepo busRepo;
 	private ReservationClient reservationClient;
+	
+	private static final String BUS_NOT_FOUND_MESSAGE = "Bus not found with ID: ";
 
 	private final Logger logger = LoggerFactory.getLogger(BusServiceImpl.class);
 
+	// Adds a new bus
 	public Bus addBus(Bus bus) throws ResourceNotFoundException {
-//		logger.info("****Bus Added sucessefully with id {}",bus.getBusId());
-//		if(busRepo.existByBusNo(bus.getBusNo())) {
-//			throw new ResourceNotFoundException("Bus already exist with given Number");
-//		}
+		logger.info("Adding bus: {}", bus);
 		return busRepo.save(bus);
 	}
 
+	// Fetches all buses
 	public List<Bus> fetchAllBus() {
-		logger.info("*****Fetching all Buses......");
+		logger.info("Fetching all buses");
 		return busRepo.findAll();
 	}
 
+	// Finds a bus by its ID
 	public Bus findBusById(Long id) throws ResourceNotFoundException {
 		Optional<Bus> bus = busRepo.findById(id);
 		if (!bus.isPresent()) {
-			throw new ResourceNotFoundException("Bus not found with ID: " + id);
+			logger.error(BUS_NOT_FOUND_MESSAGE, id);
+			throw new ResourceNotFoundException(BUS_NOT_FOUND_MESSAGE + id);
 		}
-		logger.info("Finding bus by id{}", id);
+		logger.info("Finding bus by ID: {}", id);
 		return bus.get();
-
 	}
 
+	// Updates an existing bus by its ID
 	public Bus updateBus(Long id, Bus bus) throws ResourceNotFoundException {
 		Bus existingBus = busRepo.findById(id).orElse(null);
-
 		if (existingBus == null) {
-			throw new ResourceNotFoundException("Bus not found with ID: " + id);
+			logger.error(BUS_NOT_FOUND_MESSAGE, id);
+			throw new ResourceNotFoundException(BUS_NOT_FOUND_MESSAGE + id);
 		}
 		existingBus.setBusNo(bus.getBusNo());
 		existingBus.setRouteFrom(bus.getRouteFrom());
@@ -59,24 +63,25 @@ public class BusServiceImpl implements BusService {
 		existingBus.setDepartureTime(bus.getDepartureTime());
 		existingBus.setPrice(bus.getPrice());
 
-		// Save the updated bus
+		logger.info("Updating bus with ID: {}", id);
 		return busRepo.save(existingBus);
 	}
 
+	// Deletes a bus by its ID
 	public void deleteBus(Long id) throws ResourceNotFoundException {
 		Optional<Bus> bus = busRepo.findById(id);
 		if (bus.isPresent()) {
 			busRepo.deleteById(id);
-			logger.info("Bus deleted with id {}", id);
+			logger.info("Bus deleted with ID: {}", id);
 		} else {
-			throw new ResourceNotFoundException("Bus not found with id" + id);
-
+			logger.error(BUS_NOT_FOUND_MESSAGE, id);
+			throw new ResourceNotFoundException(BUS_NOT_FOUND_MESSAGE + id);
 		}
 	}
 
+	// Gets all reservations
 	public List<Reservation> getReservations() {
-		logger.info("Geeting all reservation");
+		logger.info("Getting all reservations");
 		return reservationClient.getAllReservation();
 	}
-
 }

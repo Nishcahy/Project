@@ -1,5 +1,7 @@
 package com.feedback.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,32 +25,78 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class FeedBackController {
 
+	private static final Logger logger = LoggerFactory.getLogger(FeedBackController.class);
+
 	FeedbackService feedbackService;
-	
+
+	/**
+	 * Endpoint to save a new feedback.
+	 * 
+	 * @param feedBack The feedback entity to be saved.
+	 * @return ResponseEntity containing the saved feedback and HTTP status.
+	 */
 	@PostMapping("/save")
-	public ResponseEntity<Feedback> save(@RequestBody Feedback feedBack){
-		return new ResponseEntity<>(feedbackService.addFeedBack(feedBack),HttpStatus.CREATED);
+	public ResponseEntity<Feedback> save(@RequestBody Feedback feedBack) {
+		logger.info("Saving feedback: {}", feedBack);
+		Feedback savedFeedback = feedbackService.addFeedBack(feedBack);
+		logger.info("Feedback saved with ID: {}", savedFeedback.getFeedBackId());
+		return new ResponseEntity<>(savedFeedback, HttpStatus.CREATED);
 	}
-	
+
+	/**
+	 * Endpoint to delete a feedback by its ID.
+	 * 
+	 * @param feedBackId The ID of the feedback to be deleted.
+	 * @return ResponseEntity containing a success message and HTTP status.
+	 */
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> delete(@PathVariable("id") Long feedBackId){
-		return new ResponseEntity<>(feedbackService.removeFeedBack(feedBackId),HttpStatus.OK);
+	public ResponseEntity<String> delete(@PathVariable("id") Long feedBackId) {
+		logger.info("Deleting feedback with ID: {}", feedBackId);
+		String response = feedbackService.removeFeedBack(feedBackId);
+		logger.info("Feedback deleted with ID: {}", feedBackId);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
-	
+
+	/**
+	 * Endpoint to update an existing feedback by its ID.
+	 * 
+	 * @param feedBackId The ID of the feedback to be updated.
+	 * @param feedBack   The updated feedback entity.
+	 * @return ResponseEntity containing the updated feedback and HTTP status.
+	 */
 	@PutMapping("/update/{id}")
-	public ResponseEntity<Feedback> update(@PathVariable("id") Long feedBackId,@RequestBody Feedback feedBack){
-		return new ResponseEntity<>(feedbackService.updateFeedback(feedBackId, feedBack),HttpStatus.OK);
+	public ResponseEntity<Feedback> update(@PathVariable("id") Long feedBackId, @RequestBody Feedback feedBack) {
+		logger.info("Updating feedback with ID: {}", feedBackId);
+		Feedback updatedFeedback = feedbackService.updateFeedback(feedBackId, feedBack);
+		logger.info("Feedback updated with ID: {}", updatedFeedback.getFeedBackId());
+		return new ResponseEntity<>(updatedFeedback, HttpStatus.OK);
 	}
-	
+
+	/**
+	 * Endpoint to fetch a feedback by its ID.
+	 * 
+	 * @param feedBackId The ID of the feedback to be fetched.
+	 * @return ResponseEntity containing the feedback DTO and HTTP status.
+	 */
 	@GetMapping("/getById/{id}")
-	public ResponseEntity<FeedBackDTO> getById(@PathVariable("id") Long feedBackId){
-		return new ResponseEntity<>(feedbackService.fetchFeedbackById(feedBackId),HttpStatus.OK);
+	public ResponseEntity<FeedBackDTO> getById(@PathVariable("id") Long feedBackId) {
+		logger.info("Fetching feedback with ID: {}", feedBackId);
+		FeedBackDTO feedbackDTO = feedbackService.fetchFeedbackById(feedBackId);
+		logger.info("Feedback fetched with ID: {}", feedBackId);
+		return new ResponseEntity<>(feedbackDTO, HttpStatus.OK);
 	}
-	
-	 @GetMapping("/{id}/reservation")
-	    public Reservation getReservationForFeedback(@PathVariable Long id) {
-	        return feedbackService.getReservationForFeedback(id);
-	    }
-	
+
+	/**
+	 * Endpoint to fetch the reservation associated with a feedback by feedback ID.
+	 * 
+	 * @param id The ID of the feedback.
+	 * @return The reservation associated with the feedback.
+	 */
+	@GetMapping("/{id}/reservation")
+	public Reservation getReservationForFeedback(@PathVariable Long id) {
+		logger.info("Fetching reservation for feedback with ID: {}", id);
+		Reservation reservation = feedbackService.getReservationForFeedback(id);
+		logger.info("Reservation fetched for feedback with ID: {}", id);
+		return reservation;
+	}
 }

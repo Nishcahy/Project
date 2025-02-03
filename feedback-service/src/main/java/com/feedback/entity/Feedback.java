@@ -22,7 +22,7 @@ public class Feedback {
 	private Long userId;
 
 	private Long reservationId;
-
-	private String complaintStatement;
+	
+	private String feedBackStatement;
 
 }

@@ -1,4 +1,4 @@
-package com.busreservation.service;
+package com.busreservation.service.client;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.busreservation.dto.Reservation;
 
-@FeignClient(url="http://localhost:8081/api/reservations",value="bus-booking")
+@FeignClient("bus-booking")
 public interface ReservationClient {
 	
-	@GetMapping("/getAllReservation")
+	@GetMapping("api/reservations/getAllReservation")
 	List<Reservation> getAllReservation();
 
 }
