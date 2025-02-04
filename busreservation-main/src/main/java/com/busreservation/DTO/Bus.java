@@ -2,7 +2,6 @@ package com.busreservation.dto;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -26,8 +25,7 @@ public class Bus {
 	@Min(value = 1, message = "Seats must be at least 1.")
 	private int seats;
 
-	@NotNull
-	@Pattern(regexp = "^(2[0-3]|[01]?\\d):[0-5]\\d$", message = "Departure time must be in HH:mm format (24-hour clock).")
+	@NotNull(message = "Departure time must be in HH:mm format (24-hour clock).")
 	private String departureTime;
 
 	@Min(value = 0, message = "Price must be a positive value.")

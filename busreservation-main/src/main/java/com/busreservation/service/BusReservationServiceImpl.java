@@ -19,15 +19,16 @@ import com.busreservation.service.client.BusClient;
 
 import feign.FeignException;
 
-@Service
 
+@Service
 public class BusReservationServiceImpl implements BusReservation{
 		
 		Logger logger=LoggerFactory.getLogger(BusReservationServiceImpl.class);
-		@Autowired
+		
 	    private final ReservationRepo reservationRepository;
-		@Autowired
+		
 	    private final BusClient busClient;
+	    
 	    public BusReservationServiceImpl(ReservationRepo reservationRepository,BusClient busClient) {
 	        this.reservationRepository = reservationRepository;
 	        this.busClient=busClient;
@@ -53,7 +54,7 @@ public class BusReservationServiceImpl implements BusReservation{
 	                throw new ResourceNotFoundException("Bus not found with ID: " + reservation.getBusId());
 	            }
 	            // Handle other exceptions
-	            throw new RuntimeException("An error occurred while fetching bus details", e);
+	            throw new ResourceNotFoundException("An error occurred while fetching bus details");
 	        }
 	    }
 	    
