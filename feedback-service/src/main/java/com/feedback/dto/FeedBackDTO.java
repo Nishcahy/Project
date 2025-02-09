@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 public class FeedBackDTO {
 
 	private Long feedBackId;
+	
 	private Long userId;
+	
 	private Long reservationId;
-	
+
 	private String complaintStatement;
-	
+
 	private LocalDate date;
-	
+
 	private Long busId;
 }

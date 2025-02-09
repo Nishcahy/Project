@@ -18,11 +18,11 @@ public class Passenger {
 
 	@NotBlank(message = "name is required")
 	private String name;
+	
 	@NotBlank(message = "gender is required")
 	private String gender;
 
-	@NotNull(message="age is required")
+	@NotNull(message = "age is required")
 	private int age;
-
 
 }

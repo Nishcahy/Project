@@ -20,8 +20,9 @@ import lombok.AllArgsConstructor;
 public class BusServiceImpl implements BusService {
 
 	private BusRepo busRepo;
-	private ReservationClient reservationClient;
 	
+	private ReservationClient reservationClient;
+
 	private static final String BUS_NOT_FOUND_MESSAGE = "Bus not found with ID: ";
 
 	private final Logger logger = LoggerFactory.getLogger(BusServiceImpl.class);

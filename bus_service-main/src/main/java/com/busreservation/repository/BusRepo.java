@@ -5,9 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.busreservation.entity.Bus;
 
-
 @Repository
-public interface BusRepo extends JpaRepository<Bus, Long>{
-	
+public interface BusRepo extends JpaRepository<Bus, Long> {
 
 }

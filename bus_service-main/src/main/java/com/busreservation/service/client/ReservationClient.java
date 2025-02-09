@@ -9,7 +9,7 @@ import com.busreservation.dto.Reservation;
 
 @FeignClient("bus-booking")
 public interface ReservationClient {
-	
+
 	@GetMapping("api/reservations/getAllReservation")
 	List<Reservation> getAllReservation();
 

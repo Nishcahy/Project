@@ -1,5 +1,6 @@
 package com.busreservation.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import com.busreservation.entity.Reservation;
 import com.busreservation.service.BusReservationServiceImpl;
 import com.busreservation.service.PassengerService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -57,11 +59,27 @@ public class ReservationController {
 
 	// Finds buses by route from and to destinations
 	@GetMapping("/{routeFrom}/{routeTo}")
+	@CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "failReservation")
 	public ResponseEntity<List<Bus>> findBusByFromAndToDestination(@PathVariable String routeFrom,
 			@PathVariable String routeTo) {
 		logger.info("Finding buses from {} to {}", routeFrom, routeTo);
 		return new ResponseEntity<>(reservationService.findBusByFromAndToDestination(routeFrom, routeTo),
 				HttpStatus.OK);
+	}
+
+	public ResponseEntity<List<Bus>> failReservation(String routeFrom,
+			@PathVariable String routeTo,Exception e) {
+		List<Bus> buses = new ArrayList<>();
+		Bus bus=new Bus();
+		bus.setBusNo("Bus Not Available");
+		bus.setDepartureTime("");
+		bus.setPrice(0);
+		bus.setSeats(0);
+		bus.setRouteFrom("");
+		bus.setRouteTo("");
+		buses.add(bus);
+		return new ResponseEntity<>(buses, HttpStatus.SERVICE_UNAVAILABLE);
+
 	}
 
 	// Deletes a passenger from a reservation by reservation ID and passenger ID

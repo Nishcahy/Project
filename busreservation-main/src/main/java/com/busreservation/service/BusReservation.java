@@ -9,11 +9,15 @@ import com.busreservation.entity.Reservation;
 public interface BusReservation {
 
 	ReservationDTO createReservation(Reservation reservation);
+
 	List<Reservation> getReservationsByUser(Long userId);
-	 List<Bus> findBusByFromAndToDestination(String routeFrom,String routeTo);
-	 
-	 String deleteReservation(Long id);
-	 List<Reservation> getAllReservation();
-	 Reservation findById(Long reservationId);
-	
+
+	List<Bus> findBusByFromAndToDestination(String routeFrom, String routeTo);
+
+	String deleteReservation(Long id);
+
+	List<Reservation> getAllReservation();
+
+	Reservation findById(Long reservationId);
+
 }

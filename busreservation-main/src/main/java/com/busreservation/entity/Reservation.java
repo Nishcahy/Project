@@ -10,33 +10,35 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
 @Data
 public class Reservation {
-		
-		@Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id;
 
-	    @NotNull
-	    private Long userId; // Reference to the user making the reservation
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	    @NotNull
-	    private Long busId; // Reference to the bus
+	@NotNull
+	private Long userId; // Reference to the user making the reservation
 
-	    @NotNull
-	    private LocalDate date;
+	@NotNull
+	private Long busId; // Reference to the bus
 
-	    @NotNull
-	    private int numberOfSeats;
+	@NotNull
+	private LocalDate date;
 
-	    private Double totalAmount;
-	    
-	    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	    @JoinColumn(name = "reservation_id")	
-	    private List<Passenger> passengers;
-	
+	@NotNull(message = "Minimum 1 seat is required")
+	@Max(value = 5,message = "You cannot book more than 5 seats")
+	private int numberOfSeats;
+
+	private Double totalAmount;
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "reservation_id")
+	private List<Passenger> passengers;
+
 }
