@@ -30,7 +30,7 @@ public class FeedBackController {
 	FeedbackService feedbackService;
 
 	/**
-	 * Endpoint to save a new feedback.
+	 * EndPoint to save a new feedback.
 	 * 
 	 * @param feedBack The feedback entity to be saved.
 	 * @return ResponseEntity containing the saved feedback and HTTP status.
@@ -44,7 +44,7 @@ public class FeedBackController {
 	}
 
 	/**
-	 * Endpoint to delete a feedback by its ID.
+	 * EndPoint to delete a feedback by its ID.
 	 * 
 	 * @param feedBackId The ID of the feedback to be deleted.
 	 * @return ResponseEntity containing a success message and HTTP status.
@@ -58,7 +58,7 @@ public class FeedBackController {
 	}
 
 	/**
-	 * Endpoint to update an existing feedback by its ID.
+	 * EndPoint to update an existing feedback by its ID.
 	 * 
 	 * @param feedBackId The ID of the feedback to be updated.
 	 * @param feedBack   The updated feedback entity.
@@ -73,7 +73,7 @@ public class FeedBackController {
 	}
 
 	/**
-	 * Endpoint to fetch a feedback by its ID.
+	 * EndPoint to fetch a feedback by its ID.
 	 * 
 	 * @param feedBackId The ID of the feedback to be fetched.
 	 * @return ResponseEntity containing the feedback DTO and HTTP status.
@@ -87,7 +87,7 @@ public class FeedBackController {
 	}
 
 	/**
-	 * Endpoint to fetch the reservation associated with a feedback by feedback ID.
+	 * EndPoint to fetch the reservation associated with a feedback by feedback ID.
 	 * 
 	 * @param id The ID of the feedback.
 	 * @return The reservation associated with the feedback.

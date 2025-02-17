@@ -19,5 +19,20 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
 
 	}
+	
+	@ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<Map<String, Object>> handleDatabaseException(DatabaseException exception) {
+        Map<String, Object> res = new HashMap<>();
+        res.put("message", exception.getMessage());
+        res.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+	@ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception exception) {
+        Map<String, Object> res = new HashMap<>();
+        res.put("message", exception.getMessage());
+        res.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }

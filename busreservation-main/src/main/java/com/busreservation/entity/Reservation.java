@@ -23,7 +23,7 @@ public class Reservation {
 	private Long id;
 
 	@NotNull
-	private Long userId; // Reference to the user making the reservation
+	private Long userId;
 
 	@NotNull
 	private Long busId; // Reference to the bus

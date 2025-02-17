@@ -1,10 +1,9 @@
 package com.feedback.exception;
 
-public class ResourceNotFoundException extends RuntimeException{
+public class ResourceNotFoundException extends RuntimeException {
 
-	public ResourceNotFoundException(String msg){
+	public ResourceNotFoundException(String msg) {
 		super(msg);
 	}
-
 
 }
