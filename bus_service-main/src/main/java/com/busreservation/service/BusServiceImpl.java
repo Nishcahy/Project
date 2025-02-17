@@ -77,6 +77,8 @@ public class BusServiceImpl implements BusService {
 			existingBus.setRouteTo(bus.getRouteTo());
 			existingBus.setSeats(bus.getSeats());
 			existingBus.setDepartureTime(bus.getDepartureTime());
+			existingBus.setAvailableSeats(bus.getAvailableSeats());
+			existingBus.setBookedSeatNumbers(bus.getBookedSeatNumbers());
 			existingBus.setPrice(bus.getPrice());
 
 			logger.info("Updating bus with ID: {}", id);
@@ -89,7 +91,7 @@ public class BusServiceImpl implements BusService {
 
 	// Deletes a bus by its ID
 	public void deleteBus(Long id) throws ResourceNotFoundException {
-		try {
+		
 			Optional<Bus> bus = busRepo.findById(id);
 			if (bus.isPresent()) {
 				busRepo.deleteById(id);
@@ -98,10 +100,7 @@ public class BusServiceImpl implements BusService {
 				logger.error(BUS_NOT_FOUND_MESSAGE, id);
 				throw new ResourceNotFoundException(BUS_NOT_FOUND_MESSAGE + id);
 			}
-		} catch (Exception e) {
-			logger.error("Failed to delete bus with ID: {}", id, e);
-			throw new DatabaseException("Failed to delete bus with ID");
-		}
+		
 	}
 
 	// Gets all reservations

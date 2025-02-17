@@ -18,12 +18,12 @@ import lombok.AllArgsConstructor;
 public class PassengerServiceImpl implements PassengerService {
 
 	private PassengerRepo passengerRepo;
+	private BusReservation busReservation;
 	private ReservationRepo reservationRepo;
 	private BusClient busClient;
 
 	@Override
 	public Passenger addPassenger(Passenger passenger) {
-
 		return passengerRepo.save(passenger);
 	}
 

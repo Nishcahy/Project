@@ -1,5 +1,7 @@
 package com.busreservation.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +32,12 @@ public class Bus {
 
     @Min(value = 1, message = "Seats must be at least 1.")
     private int seats;
+    
+    @Min(value = 0,message = "Available seats cannot be lessthan 0")
+    private int availableSeats;
+    
+    
+    private List<Integer> bookedSeatNumbers;
 
     @NotNull
     private String departureTime;
