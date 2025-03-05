@@ -11,5 +11,6 @@ import com.busreservation.entity.Reservation;
 @Repository
 public interface ReservationRepo extends JpaRepository<Reservation, Long> {
 	List<Reservation> findByUserId(Long userId);
+	List<Reservation> findByBusId(Long busId);
 
 }

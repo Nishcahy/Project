@@ -3,6 +3,7 @@ package com.busreservation.service.client;
 import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,4 +24,8 @@ public interface BusClient {
 	
 	@PutMapping("api/buses/update-bus/{id}")
 	public Bus updateBus(@PathVariable Long id, @RequestBody Bus bus);
+	
+	@GetMapping("/getByBusNo/{busNo}")
+	public List<Bus> findByBusNo(@PathVariable String busNo );
+		
 }

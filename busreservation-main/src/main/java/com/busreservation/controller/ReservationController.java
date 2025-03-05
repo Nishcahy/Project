@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +45,7 @@ public class ReservationController {
 
 	// Gets reservations by user ID
 	@GetMapping("/user/{userId}")
-	public List<Reservation> getReservationsByUser(@PathVariable Long userId) {
+	public List<ReservationDTO> getReservationsByUser(@PathVariable Long userId) {
 		logger.info("Fetching reservations for user ID: {}", userId);
 		return reservationService.getReservationsByUser(userId);
 	}
@@ -77,8 +78,11 @@ public class ReservationController {
 		bus.setSeats(0);
 		bus.setRouteFrom("");
 		bus.setRouteTo("");
+		bus.setAvailableSeats(0);
+		bus.setBookedSeatNumbers(new ArrayList<>());
+		bus.setBusId(null);
 		buses.add(bus);
-		return new ResponseEntity<>(buses, HttpStatus.SERVICE_UNAVAILABLE);
+		return new ResponseEntity<>(buses, HttpStatus.OK);
 
 	}
 
@@ -93,7 +97,7 @@ public class ReservationController {
 
 	// Gets all reservations
 	@GetMapping("/getAllReservation")
-	public ResponseEntity<List<Reservation>> getAllReservation() {
+	public ResponseEntity<List<ReservationDTO>> getAllReservation() {
 		logger.info("Fetching all reservations");
 		return new ResponseEntity<>(reservationService.getAllReservation(), HttpStatus.OK);
 	}
@@ -103,5 +107,19 @@ public class ReservationController {
 	public ResponseEntity<Reservation> findByReservationId(@PathVariable Long id) {
 		logger.info("Fetching reservation with ID: {}", id);
 		return new ResponseEntity<>(reservationService.findById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping("/by-bus-id/{busId}")
+	public ResponseEntity<List<ReservationDTO>> findReservationByBus(@PathVariable Long busId){
+		logger.info("Fetching reservation by busId");
+		return new ResponseEntity<>(reservationService.getByBusId(busId),HttpStatus.OK);
+		
+	}
+	
+	@GetMapping("/by-busno/{busno}")
+	public ResponseEntity<List<ReservationDTO>> findReservationByBus(@PathVariable String busno){
+		logger.info("Fetching reservation by busNo");
+		return new ResponseEntity<>(reservationService.getByBusNo(busno),HttpStatus.OK);
+		
 	}
 }

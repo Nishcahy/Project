@@ -1,9 +1,12 @@
 package com.feedback.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -99,4 +102,21 @@ public class FeedBackController {
 		logger.info("Reservation fetched for feedback with ID: {}", id);
 		return reservation;
 	}
+	
+	@GetMapping("/getByUserId/{id}")
+	public ResponseEntity<List<FeedBackDTO>> getByUserId(@PathVariable("id") Long userId) {
+		logger.info("Fetching feedback with ID: {}", userId);
+		List<FeedBackDTO> feedbackDTO = feedbackService.findByUserId(userId);
+		logger.info("Feedback fetched with ID: {}", userId);
+		return new ResponseEntity<>(feedbackDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping("/get-all-feedback")
+	public ResponseEntity<List<FeedBackDTO>> getAllFeedbacks(){
+		logger.info("Getting all feedbacks");
+		List<FeedBackDTO> allFeedback=feedbackService.findAll();
+		return new ResponseEntity<>(allFeedback,HttpStatus.OK);
+	}
+	
+	
 }

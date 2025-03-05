@@ -19,5 +19,7 @@ public interface BusService {
 	void deleteBus(Long id) throws ResourceNotFoundException;
 
 	List<Reservation> getReservations();
+	
+	List<Bus> findByBusNo(String busNo);
 
 }

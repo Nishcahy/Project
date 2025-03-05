@@ -40,5 +40,8 @@ public class Reservation {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "reservation_id")
 	private List<Passenger> passengers;
+	
+	
 
 }
+

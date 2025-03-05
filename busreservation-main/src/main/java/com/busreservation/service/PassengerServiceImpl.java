@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+
+import com.busreservation.dto.Bus;
 import com.busreservation.entity.Passenger;
 import com.busreservation.entity.Reservation;
 import com.busreservation.exception.ResourceNotFoundException;
@@ -65,17 +67,45 @@ public class PassengerServiceImpl implements PassengerService {
 	}
 
 	public String deletePassengerFromReservation(Long reservationId, Long passengerId) {
-		Optional<Reservation> reservationOpt = reservationRepo.findById(reservationId);
-		if (reservationOpt.isPresent()) {
-			Reservation reservation = reservationOpt.get();
-			reservation.getPassengers().removeIf(passenger -> passenger.getPid().equals(passengerId));
-			reservation.setNumberOfSeats(reservation.getNumberOfSeats() - 1);
-			reservation.setTotalAmount(
-					reservation.getTotalAmount() - busClient.fetchBus(reservation.getBusId()).getPrice());
-			reservationRepo.save(reservation);
-			return "Passenger deleted in Reservation";
-		} else {
-			throw new ResourceNotFoundException("Reservation not found");
-		}
+	    Optional<Reservation> reservationOpt = reservationRepo.findById(reservationId);
+	    if (reservationOpt.isPresent()) {
+	        Reservation reservation = reservationOpt.get();
+	        Optional<Passenger> passengerOpt = passengerRepo.findById(passengerId);
+	 
+	        if (passengerOpt.isPresent()) {
+	            Passenger passenger = passengerOpt.get();
+	            int seatNumber = passenger.getSeatNumber();
+	 
+	            // Remove the passenger from the reservation
+	            reservation.getPassengers().removeIf(p -> p.getPid().equals(passengerId));
+	            reservation.setNumberOfSeats(reservation.getNumberOfSeats() - 1);
+	            reservation.setTotalAmount(
+	                    reservation.getTotalAmount() - busClient.fetchBus(reservation.getBusId()).getPrice());
+	 
+	            // Check if all passengers have been removed
+	            if (reservation.getPassengers().isEmpty()) {
+	                // Delete the reservation
+	                reservationRepo.delete(reservation);
+	                return "Reservation deleted as all passengers have been removed";
+	            } else {
+	                // Save the updated reservation
+	                reservationRepo.save(reservation);
+	 
+	                // Update the bus details
+	                Bus bus = busClient.fetchBus(reservation.getBusId());
+	                bus.setAvailableSeats(bus.getAvailableSeats() + 1);
+	                bus.getBookedSeatNumbers().remove(Integer.valueOf(seatNumber)); // Remove the seat number from booked seats
+	 
+	                // Update the bus in the bus service
+	                busClient.updateBus(bus.getBusId(), bus);
+	 
+	                return "Passenger deleted from Reservation";
+	            }
+	        } else {
+	            throw new ResourceNotFoundException("Passenger not found");
+	        }
+	    } else {
+	        throw new ResourceNotFoundException("Reservation not found");
+	    }
 	}
 }

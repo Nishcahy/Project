@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,6 +74,13 @@ public class BusController {
 	public ResponseEntity<List<Reservation>> getAllReservation() {
 		logger.info("Fetching Reservation ");
 		return new ResponseEntity<>(busService.getReservations(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/getByBusNo/{busNo}")
+	public ResponseEntity<List<Bus>> findByBusNo(@PathVariable String busNo ){
+		logger.info("Fetching BusBy Number ");
+		
+		return new ResponseEntity<>(busService.findByBusNo(busNo),HttpStatus.OK);
 	}
 
 }

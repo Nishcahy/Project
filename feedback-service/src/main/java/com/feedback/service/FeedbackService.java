@@ -1,5 +1,7 @@
 package com.feedback.service;
 
+import java.util.List;
+
 import com.feedback.dto.FeedBackDTO;
 import com.feedback.entity.Feedback;
 import com.feedback.entity.Reservation;
@@ -16,4 +18,8 @@ public interface FeedbackService {
 	Feedback updateFeedback(Long feedBackId,Feedback feedBack) throws ResourceNotFoundException;
 	
 	Reservation getReservationForFeedback(Long feedbackId);
+	
+	List<FeedBackDTO> findByUserId(Long userId);
+	
+	List<FeedBackDTO> findAll();
 }

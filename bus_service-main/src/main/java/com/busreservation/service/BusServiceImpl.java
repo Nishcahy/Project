@@ -113,4 +113,10 @@ public class BusServiceImpl implements BusService {
 			throw new DatabaseException("Failed to get all reservations");
 		}
 	}
+
+	@Override
+	public List<Bus> findByBusNo(String busNo) {
+		
+		return busRepo.findByBusNo(busNo);
+	}
 }

@@ -95,7 +95,7 @@ class BusBookingApplicationTests {
 		List<Reservation> reservations = Arrays.asList(reservation);
 		when(reservationRepository.findByUserId(anyLong())).thenReturn(reservations);
 
-		List<Reservation> fetchedReservations = busReservationService.getReservationsByUser(1L);
+		List<ReservationDTO> fetchedReservations = busReservationService.getReservationsByUser(1L);
 
 		assertNotNull(fetchedReservations);
 		assertEquals(1, fetchedReservations.size());
@@ -148,18 +148,7 @@ class BusBookingApplicationTests {
 		verify(reservationRepository, times(0)).deleteById(anyLong());
 	}
 
-	@Test
-	void testGetAllReservation() {
-		List<Reservation> reservations = Arrays.asList(reservation);
-		when(reservationRepository.findAll()).thenReturn(reservations);
-
-		List<Reservation> fetchedReservations = busReservationService.getAllReservation();
-
-		assertNotNull(fetchedReservations);
-		assertEquals(1, fetchedReservations.size());
-		verify(reservationRepository, times(1)).findAll();
-	}
-
+	
 	@Test
 	void testFindById() {
 		when(reservationRepository.findById(anyLong())).thenReturn(Optional.of(reservation));

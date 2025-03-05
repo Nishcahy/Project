@@ -27,5 +27,9 @@ public class Reservation {
 	    private int numberOfSeats;
 
 	    private Double totalAmount;
+	 
+	    public LocalDate getReservationDate() {
+	        return date;
+	    }
 
 }

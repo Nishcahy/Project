@@ -46,14 +46,23 @@ public class BusReservationServiceImpl implements BusReservation {
 	        if (busDetails.getBookedSeatNumbers() == null) {
 	            busDetails.setBookedSeatNumbers(new ArrayList<>());
 	        }
-
-	        // Check for already booked seats
+	     // Validate the number of passengers matches the number of seats
+	        if (reservation.getPassengers().size() != reservation.getNumberOfSeats()) {
+	            throw new IllegalArgumentException("Number of passengers must match the number of seats reserved");
+	        }
+	        
+	     // Validate seat numbers are within the valid range
+	        int totalSeats = busDetails.getSeats();
 	        for (Passenger passenger : reservation.getPassengers()) {
-	            if (busDetails.getBookedSeatNumbers().contains(passenger.getSeatNumber())) {
-	                throw new ResourceNotFoundException("Seat number " + passenger.getSeatNumber() + " is already booked");
+	            int seatNumber = passenger.getSeatNumber();
+	            if (seatNumber < 1 || seatNumber > totalSeats) {
+	                throw new IllegalArgumentException("Seat number " + seatNumber + " is out of range. Valid seat numbers are from 1 to " + totalSeats);
+	            }
+	            if (busDetails.getBookedSeatNumbers().contains(seatNumber)) {
+	                throw new ResourceNotFoundException("Seat number " + seatNumber + " is already booked");
 	            }
 	        }
-
+	      
 	        // Calculate the total price dynamically
 	        double totalAmount = (double) reservation.getNumberOfSeats() * busDetails.getPrice();
 	        reservation.setTotalAmount(totalAmount);
@@ -70,10 +79,11 @@ public class BusReservationServiceImpl implements BusReservation {
 	        }
 	        busDetails.setAvailableSeats(busDetails.getAvailableSeats() - reservation.getNumberOfSeats());
 	        
-	        busClient.updateBus(busDetails.getBusId(), busDetails);
+	        
 
 	        // Save the reservation
 	        Reservation res = reservationRepository.save(reservation);
+	        busClient.updateBus(busDetails.getBusId(), busDetails);
 
 	        return new ReservationDTO(busDetails, res);
 	    } catch (FeignException e) {
@@ -83,21 +93,29 @@ public class BusReservationServiceImpl implements BusReservation {
 	        // Handle other exceptions
 	        throw new ResourceNotFoundException("An error occurred while fetching bus details"+e.getMessage());
 	    } catch (Exception e) {
-	        logger.error("Failed to create reservation", e.getStackTrace());
+	        logger.error("Failed to create reservation{}",e);
 	        throw new DatabaseException("Failed to create reservation "+e.getMessage());
 	    }
 	}
 
 	@Override
-	public List<Reservation> getReservationsByUser(Long userId) {
-		try {
-			return reservationRepository.findByUserId(userId);
-		} catch (Exception e) {
-			logger.error("Failed to fetch reservations by user ID: {}", userId, e);
-			throw new DatabaseException("Failed to fetch reservations by user ID");
-		}
+	public List<ReservationDTO> getReservationsByUser(Long userId) throws ResourceNotFoundException,DatabaseException {
+		
+	        List<Reservation> reservations = reservationRepository.findByUserId(userId);
+	        List<ReservationDTO> reservationDtos = new ArrayList<>();
+	        
+	        if (reservations.isEmpty()) {
+	            throw new ResourceNotFoundException("No reservations found for user ID: " + userId);
+	        }
+	        
+	        for (Reservation reservation : reservations) {
+	            Bus bus = busClient.fetchBus(reservation.getBusId());
+	            ReservationDTO reservationDto = new ReservationDTO(bus, reservation);
+	            reservationDtos.add(reservationDto);
+	        }
+	        
+	        return reservationDtos;
 	}
-
 	public List<Bus> findBusByFromAndToDestination(String routeFrom, String routeTo) {
 		try {
 			List<Bus> buses = busClient.fetchAllBus();
@@ -119,43 +137,51 @@ public class BusReservationServiceImpl implements BusReservation {
 
 	@Override
 	public String deleteReservation(Long id) {
-		try {
-			Reservation reservation = reservationRepository.findById(id)
-					.orElseThrow(() -> new ResourceNotFoundException("Reservation not found with ID: " + id));
+	    
+	        Reservation reservation = reservationRepository.findById(id)
+	                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found with ID: " + id));
 
-			Bus bus = busClient.fetchBus(reservation.getBusId());
-			LocalDate reservationDate = reservation.getDate();
-			LocalDate currentDate = LocalDate.now();
+	        Bus bus = busClient.fetchBus(reservation.getBusId());
+	        LocalDate reservationDate = reservation.getDate();
+	        LocalDate currentDate = LocalDate.now();
 
-			// Debug statements to check the dates
-			logger.info("***************************************Reservation Date:{} ", reservationDate);
-			logger.info("Current Date: {}", currentDate);
-			logger.info("Allowed Cancellation Date:{} ", reservationDate.plusDays(7));
-			if (currentDate.isAfter(reservationDate.minusDays(7))) {
-				throw new ResourceNotFoundException(
-						"Reservation cannot be cancelled within 7 days from the reservation date.");
-			} else {
+	        // Debug statements to check the dates
+	        logger.info("***************************************Reservation Date:{} ", reservationDate);
+	        logger.info("Current Date: {}", currentDate);
+	        logger.info("Allowed Cancellation Date:{} ", reservationDate.plusDays(7));
+	        if (currentDate.isAfter(reservationDate.minusDays(7))) {
+	            throw new ResourceNotFoundException(
+	                    "Reservation cannot be cancelled within 7 days from the reservation date.");
+	        } else {
+	            // Update available seats
+	            bus.setAvailableSeats(bus.getAvailableSeats() + reservation.getNumberOfSeats());
 
-				bus.setAvailableSeats(bus.getAvailableSeats() + reservation.getNumberOfSeats());
-				reservationRepository.deleteById(id);
+	            // Remove booked seat numbers
+	            List<Integer> bookedSeatNumbers = reservation.getPassengers().stream()
+	                    .map(Passenger::getSeatNumber)
+	                    .collect(Collectors.toList());
+	            bus.getBookedSeatNumbers().removeAll(bookedSeatNumbers);
 
-			}
+	            busClient.updateBus(bus.getBusId(), bus);
+	            reservationRepository.deleteById(id);
+	        }
 
-			return "Reservation deleted";
-		} catch (Exception e) {
-			logger.error("Failed to delete reservation with ID: {}", id, e);
-			throw new DatabaseException("Failed to delete reservation with ID: " + id);
-		}
+	        return "Reservation deleted";
+	    
 	}
-
 	@Override
-	public List<Reservation> getAllReservation() {
-		try {
-			return reservationRepository.findAll();
-		} catch (Exception e) {
-			logger.error("Failed to fetch all reservations", e);
-			throw new DatabaseException("Failed to fetch all reservations");
-		}
+	public List<ReservationDTO> getAllReservation() {
+		
+			List<Reservation> allreservations= reservationRepository.findAll();
+			List<ReservationDTO> resDTO=new ArrayList<>();
+			for(Reservation reservation:allreservations) {
+				Bus bus=busClient.fetchBus(reservation.getBusId());
+				ReservationDTO res=new ReservationDTO(bus, reservation);
+				resDTO.add(res);
+				
+			}
+			return resDTO;
+		
 	}
 
 	@Override
@@ -171,4 +197,48 @@ public class BusReservationServiceImpl implements BusReservation {
 			throw new DatabaseException("Failed to find reservation with ID: " + reservationId);
 		}
 	}
+
+	@Override
+	public List<ReservationDTO> getByBusId(Long busId) {
+		List<Reservation> reservations=reservationRepository.findByBusId(busId);
+		List<ReservationDTO> reservationDtos = new ArrayList<>();
+
+        for (Reservation reservation : reservations) {
+            Bus bus = busClient.fetchBus(reservation.getBusId());
+            if(bus==null) {
+            	throw new ResourceNotFoundException("Cannot get bus");
+            }
+            ReservationDTO reservationDto = new ReservationDTO(bus, reservation);
+            reservationDtos.add(reservationDto);
+        }
+
+        return reservationDtos;
+		
+	}
+
+	@Override
+	public List<ReservationDTO> getByBusNo(String busNo) {
+		List<Reservation> allReservations = reservationRepository.findAll();
+        List<Bus> buses = busClient.fetchAllBus().stream()
+                .filter(bus -> bus.getBusNo().equals(busNo))
+                .collect(Collectors.toList());
+
+        if (buses.isEmpty()) {
+            return new ArrayList<>(); // Return empty list if no buses found
+        }
+
+        List<ReservationDTO> reservationDtos = new ArrayList<>();
+
+        for (Reservation reservation : allReservations) {
+            for (Bus bus : buses) {
+                if (reservation.getBusId() == bus.getBusId()) {
+                    ReservationDTO reservationDto = new ReservationDTO(bus, reservation);
+                    reservationDtos.add(reservationDto);
+                    break; // Move to the next reservation after a match
+                }
+            }
+        }
+        return reservationDtos;
+    }
+	
 }

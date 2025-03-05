@@ -19,5 +19,13 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(res, HttpStatus.NOT_FOUND);
 
 	}
+	
+	@ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalStateException(IllegalStateException exception) {
+        Map<String, Object> res = new HashMap<>();
+        res.put("msg", exception.getMessage());
+        res.put("status", HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
+	}
 
 }
