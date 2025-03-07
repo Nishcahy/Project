@@ -2,8 +2,10 @@ package com.busreservation.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -60,6 +62,13 @@ public class BusReservationServiceImpl implements BusReservation {
 	            }
 	            if (busDetails.getBookedSeatNumbers().contains(seatNumber)) {
 	                throw new ResourceNotFoundException("Seat number " + seatNumber + " is already booked");
+	            }
+	        }
+	        Set<Integer> seatNumbers = new HashSet<>();
+	        for (Passenger passenger : reservation.getPassengers()) {
+	            int seatNumber = passenger.getSeatNumber();
+	            if (!seatNumbers.add(seatNumber)) {
+	                throw new IllegalArgumentException("Duplicate seat number " + seatNumber + " found in the reservation");
 	            }
 	        }
 	      
@@ -181,7 +190,6 @@ public class BusReservationServiceImpl implements BusReservation {
 				
 			}
 			return resDTO;
-		
 	}
 
 	@Override

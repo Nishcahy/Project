@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.busreservation.dto.Reservation;
+import com.busreservation.dto.ReservationDto;
 import com.busreservation.entity.Bus;
 import com.busreservation.exception.DatabaseException;
 import com.busreservation.exception.ResourceNotFoundException;
@@ -28,13 +29,13 @@ public class BusServiceImpl implements BusService {
 
 	// Adds a new bus
 	public Bus addBus(Bus bus) throws ResourceNotFoundException {
-		try {
+		if(bus.getAvailableSeats()!=bus.getSeats()) {
+			throw new ResourceNotFoundException("avialable seats cannot be less or more than total seats ");
+		}else {
 			logger.info("Adding bus: {}", bus);
 			return busRepo.save(bus);
-		} catch (Exception e) {
-			logger.error("Failed to add bus: {}", bus, e);
-			throw new DatabaseException("Failed to add bus");
-		}
+			
+		}	
 	}
 
 	// Fetches all buses
@@ -93,6 +94,13 @@ public class BusServiceImpl implements BusService {
 	public void deleteBus(Long id) throws ResourceNotFoundException {
 		
 			Optional<Bus> bus = busRepo.findById(id);
+			List<ReservationDto> res=reservationClient.findReservationByBus(id);
+			for(ReservationDto r:res) {
+				System.out.println("Id###############"+r.getBus().getBusId());
+				if(r.getBus().getBusId()==id) {
+					throw new ResourceNotFoundException("You cannt delete bus,It has been booked by users");
+				}
+			}
 			if (bus.isPresent()) {
 				busRepo.deleteById(id);
 				logger.info("Bus deleted with ID: {}", id);
