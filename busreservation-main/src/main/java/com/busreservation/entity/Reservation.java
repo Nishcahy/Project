@@ -26,7 +26,7 @@ public class Reservation {
 	private Long userId;
 
 	@NotNull
-	private Long busId; // Reference to the bus
+	private Long busId; 
 
 	@NotNull
 	private LocalDate date;
