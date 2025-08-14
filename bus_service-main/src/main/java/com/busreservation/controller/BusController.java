@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +22,10 @@ import com.busreservation.service.BusService;
 
 import lombok.AllArgsConstructor;
 
+/**
+ * Rest Controller for managing Bus related operations.
+ * This controller handles CRUD operations for Bus entities
+ */
 @RestController
 @RequestMapping("/api/buses")
 @AllArgsConstructor
@@ -32,28 +35,51 @@ public class BusController {
 
 	private final Logger logger = LoggerFactory.getLogger(BusController.class);
 
-	// addBus
+	/**
+	 * Adds a new Bus.
+	 *
+	 * @param bus The Bus object to be added.
+	 * @return ResponseEntity containing the added Bus and HttpStatus CREATED.
+	 * @throws ResourceNotFoundException if the resource is not found.
+	 */
 	@PostMapping // http://localhost:8085/api/buses
 	public ResponseEntity<Bus> addBus(@RequestBody Bus bus) throws ResourceNotFoundException {
 		logger.info("****Inside addBus method in controller");
 		return new ResponseEntity<>(busService.addBus(bus), HttpStatus.CREATED);
 	}
 
-	// Getting all buses
+	/**
+	 * Retrieves all Buses.
+	 *
+	 * @return ResponseEntity containing a list of all Buses and HttpStatus OK.
+	 */
 	@GetMapping("/all-bus") // http://localhost:8085/api/buses/all-bus
 	public ResponseEntity<List<Bus>> fetchAllBus() {
 		logger.info("Fetching all busses in controller");
 		return new ResponseEntity<>(busService.fetchAllBus(), HttpStatus.OK);
 	}
 
-	// Updating bus
+	/**
+	 * Updates an existing Bus.
+	 *
+	 * @param id  The ID of the Bus to be updated.
+	 * @param bus The updated Bus object.
+	 * @return ResponseEntity containing the updated Bus and HttpStatus OK.
+	 * @throws ResourceNotFoundException if the resource is not found.
+	 */
 	@PutMapping("update-bus/{id}") // http://localhost:8085/api/buses/update-bus/123
 	public ResponseEntity<Bus> updateBus(@PathVariable Long id, @RequestBody Bus bus) throws ResourceNotFoundException {
 		logger.info("Updating bus in controller");
 		return new ResponseEntity<>(busService.updateBus(id, bus), HttpStatus.OK);
 	}
 
-	// delete bus by id
+	/**
+	 * Deletes a Bus by its ID.
+	 *
+	 * @param id The ID of the Bus to be deleted.
+	 * @return ResponseEntity with HttpStatus NO_CONTENT.
+	 * @throws ResourceNotFoundException if the resource is not found.
+	 */
 	@DeleteMapping("/{id}") // http://localhost:8085/api/buses/123
 	public ResponseEntity<Bus> deleteBus(@PathVariable Long id) throws ResourceNotFoundException {
 		logger.info("Deleting bus in controller");
@@ -62,25 +88,39 @@ public class BusController {
 
 	}
 
-	// get bus by id
+	/**
+	 * Retrieves a Bus by its ID.
+	 *
+	 * @param id The ID of the Bus to be retrieved.
+	 * @return ResponseEntity containing the Bus and HttpStatus OK.
+	 * @throws ResourceNotFoundException if the resource is not found.
+	 */
 	@GetMapping("/findBus/{id}") // http://localhost:8085/api/buses/findBus/123
 	public ResponseEntity<Bus> findByBusId(@PathVariable Long id) throws ResourceNotFoundException {
 		logger.info("Fetching bus by id in controller");
 		return new ResponseEntity<>(busService.findBusById(id), HttpStatus.OK);
 	}
 
-	// getting all reservation
+	/**
+	 * Retrieves all Reservations.
+	 *
+	 * @return ResponseEntity containing a list of all Reservations and HttpStatus OK.
+	 */
 	@GetMapping("/getAllReservation") // http://localhost:8085/api/buses/getAllReservation
 	public ResponseEntity<List<Reservation>> getAllReservation() {
 		logger.info("Fetching Reservation ");
 		return new ResponseEntity<>(busService.getReservations(), HttpStatus.OK);
 	}
-	
-	@GetMapping("/getByBusNo/{busNo}")
-	public ResponseEntity<List<Bus>> findByBusNo(@PathVariable String busNo ){
-		logger.info("Fetching BusBy Number ");
-		
-		return new ResponseEntity<>(busService.findByBusNo(busNo),HttpStatus.OK);
-	}
 
+	/**
+	 * Retrieves a list of Buses by their Bus Number.
+	 *
+	 * @param busNo The Bus Number to search for.
+	 * @return ResponseEntity containing a list of Buses and HttpStatus OK.
+	 */
+	@GetMapping("/getByBusNo/{busNo}")
+	public ResponseEntity<List<Bus>> findByBusNo(@PathVariable String busNo) {
+		logger.info("Fetching BusBy Number ");
+		return new ResponseEntity<>(busService.findByBusNo(busNo), HttpStatus.OK);
+	}
 }
