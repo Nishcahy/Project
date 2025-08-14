@@ -1,23 +1,29 @@
-HELP.md
+# =================================================
+# General build files and logs
+# =================================================
 target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+*.log
+.DS_Store
+Thumbs.db
 
-### STS ###
+# =================================================
+# IDE Files - Ignored to avoid user-specific settings in repo
+# =================================================
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### STS / Eclipse ###
 .apt_generated
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+.sts4-cache/
 
 ### NetBeans ###
 /nbproject/private/
@@ -26,8 +32,12 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
+
+# =================================================
+# Maven - Keep the wrapper, ignore other local repo files
+# =================================================
+# This ensures the Maven wrapper is always included in the repository
+!.mvn/wrapper/maven-wrapper.jar
